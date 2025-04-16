@@ -9,9 +9,10 @@ public static class Helpers
     }
     public enum GatePosition
     {
-        North,
-        South,
-        East,
-        West,
+        None = -1,
+        North = 0,
+        South = 1,
+        East = 2,
+        West = 3
     }
 }
