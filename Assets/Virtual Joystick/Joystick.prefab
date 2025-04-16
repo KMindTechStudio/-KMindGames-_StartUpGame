@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2758405938452465863}
-  - component: {fileID: 789367492212164355}
   m_Layer: 5
   m_Name: Joystick
   m_TagString: Untagged
@@ -37,23 +36,6 @@ RectTransform:
   m_AnchoredPosition: {x: 132, y: 35}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &789367492212164355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5439023375540552587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a956448ed48b9a41887ac59b7facf2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joystickBackground: {fileID: 7681070123974098984}
-  joystickHandle: {fileID: 7681070123926528553}
-  joystickMoveThreshold: 1
-  player: {fileID: 0}
-  moveSpeed: 12
 --- !u!1001 &7050310675607956349
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -151,11 +133,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a9c736eaa572cc49b0bfa00f26acfa6, type: 3}
---- !u!224 &7681070123926528553 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 814897134800210260, guid: 1a9c736eaa572cc49b0bfa00f26acfa6, type: 3}
-  m_PrefabInstance: {fileID: 7050310675607956349}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7681070123974098984 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 814897134755523413, guid: 1a9c736eaa572cc49b0bfa00f26acfa6, type: 3}
