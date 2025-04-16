@@ -5,11 +5,12 @@ public class VirtualJoystick : MonoBehaviour
 
     public RectTransform joystickBackground; // Background of the joystick
     public RectTransform joystickHandle; // Handle of the joystick
-    public float joystickMoveThreshold = 1.0f; // Movement threshold
     public Transform player; // Reference to the player
     public float moveSpeed = 3f; // Speed of player movement
     private Vector2 inputVector;
-    private float distance;
+    private float distance; // Distance from the joystick center to the touch point
+    public int maxDistance = 900; // Maximum distance for joystick movement
+    public float joystickMoveThreshold = 1.0f; // Movement threshold
 
     private void Update()
     {
@@ -19,8 +20,11 @@ public class VirtualJoystick : MonoBehaviour
             Vector2 mousePosition = Input.mousePosition;
             Vector2 joystickPosition = joystickBackground.position;
 
+            //Calculate the distance from the joystick center to the touch point
             distance = Vector2.Distance(mousePosition, joystickPosition);
-            if (distance <900)
+
+            // If the distance is less than the maximum distance, move the joystick handle
+            if (distance < maxDistance)
             {
                 inputVector = Vector2.ClampMagnitude(mousePosition - joystickPosition, joystickBackground.sizeDelta.x * 0.5f);
                 joystickHandle.localPosition = inputVector;
@@ -34,6 +38,7 @@ public class VirtualJoystick : MonoBehaviour
                 }
 
             }
+            // If the distance is greater than the maximum distance, move the joystick handle to the edge
             else
             {
                 joystickHandle.localPosition = Vector3.zero; // Reset joystick when not touched
@@ -49,6 +54,7 @@ public class VirtualJoystick : MonoBehaviour
 
     private void MovePlayer(Vector2 direction)
     {
+        // Move the player based on the joystick input (transformed y axis to z axis)
         Vector3 moveDirection = new Vector3(direction.x, 0, direction.y);
         player.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
 

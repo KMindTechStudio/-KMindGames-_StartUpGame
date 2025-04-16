@@ -5,57 +5,62 @@ using UnityEngine.UI;
 public class PlayerBehavior : MonoBehaviour
 {
     public Button btn_Dash;
-    public Image image_DashCooldown;
-    public TMP_Text text_Dashcooldown;
-    public float dashDistance = 5f;
-    private float dashCooldown = 5f;
-    private float dashCooldownTimer = 0f;
-    private bool isCooldown;
+    public Image image_DashCoolDown;
+    public TMP_Text text_DashCoolDown;
+    public float dashDistance = 5f;  // Distance to dash
+    private float dashCoolDown = 5f; // Cooldown time in seconds
+    private float dashCoolDownTimer = 0f; // Timer for cooldown
+    private bool isCoolDown; 
 
 
     void Start()
-    {
-        isCooldown = false;
-        image_DashCooldown.fillAmount = 0f;
-        text_Dashcooldown.gameObject.SetActive(false);
+    {   
+        //Initialize the starting variables
+        isCoolDown = false; //Ready to dash
+        image_DashCoolDown.fillAmount = 0f;
+        text_DashCoolDown.gameObject.SetActive(false);
         btn_Dash.onClick.AddListener(Dash);
     }
 
     void OnCooldown()
     {
-        dashCooldownTimer -= Time.deltaTime;
-        if (dashCooldownTimer <= 0f)
+        dashCoolDownTimer -= Time.deltaTime;
+        if (dashCoolDownTimer <= 0f)
         {
-            isCooldown = false;
-            text_Dashcooldown.gameObject.SetActive(false);
-            image_DashCooldown.fillAmount = 0f;
+            // If the cool down is over, make it be able to dash
+            isCoolDown = false;
+            text_DashCoolDown.gameObject.SetActive(false);
+            image_DashCoolDown.fillAmount = 0f;
             btn_Dash.interactable = true;
         }
         else
         {
-            text_Dashcooldown.gameObject.SetActive(true);
-            text_Dashcooldown.text = Mathf.Ceil(dashCooldownTimer).ToString();
-            image_DashCooldown.fillAmount = dashCooldownTimer / dashCooldown;
+            // If the cooldown is not over, show the timer and make it not be able to dash
+            text_DashCoolDown.gameObject.SetActive(true);
+            text_DashCoolDown.text = Mathf.Ceil(dashCoolDownTimer).ToString();
+            image_DashCoolDown.fillAmount = dashCoolDownTimer / dashCoolDown;
             btn_Dash.interactable = false;
         }
     }
     void Dash()
     {
-        if(isCooldown)
+        if(isCoolDown)
         {
+            //absolutely nothing
         }
         else
         {
+            // Perform the dash action and set the cooldown be true
             transform.position += transform.forward * dashDistance;
-            isCooldown = true;
-            text_Dashcooldown.gameObject.SetActive(true);
-            dashCooldownTimer = dashCooldown;
+            isCoolDown = true;
+            text_DashCoolDown.gameObject.SetActive(true);
+            dashCoolDownTimer = dashCoolDown;
         }
     }
 
     void Update()
     {
-        if (isCooldown)
+        if (isCoolDown)
         {
             OnCooldown();
         }
