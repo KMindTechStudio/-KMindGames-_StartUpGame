@@ -17,7 +17,6 @@ public class DialogueManager : MonoBehaviour
     void Start()
     {
         continueButton.onClick.AddListener(DisplayNextLine); // Gán sự kiện cho nút Continue
-        dialoguePanel.SetActive(false); // Ẩn UI hội thoại khi bắt đầu
     }
 
     public void StartDialogue(Dialogue dialogue)
