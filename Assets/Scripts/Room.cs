@@ -18,11 +18,6 @@ public class Room : MonoBehaviour
     private GameObject _gateIn;
     private GameObject _gateOut;
 
-    /// <summary>
-    /// Setup the room with the given RoomManager. 
-    /// And call SetUpGate method to set the gate in and out positions.
-    /// </summary>
-    /// <param name="roomManager"></param>
     public void SetUpRoom(RoomManager roomManager)
     {
         _roomManager = roomManager;
@@ -30,9 +25,6 @@ public class Room : MonoBehaviour
         SetUpColliders();
     }
 
-    /// <summary>
-    /// Sets the gate in and out positions for the room.
-    /// </summary>
     private void SetUpGate()
     {
         foreach (var gate in _gates)
