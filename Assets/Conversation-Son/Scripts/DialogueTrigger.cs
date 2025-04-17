@@ -12,15 +12,9 @@ public class DialogueTrigger : MonoBehaviour
         {
             Debug.LogError("Không tìm thấy DialogueManager trong Scene!");
         }
+        StartDialogue();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            StartDialogue();
-        }
-    }
 
     public void StartDialogue()
     {
