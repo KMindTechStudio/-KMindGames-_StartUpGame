@@ -7,7 +7,7 @@ public class ExitRoomCheck : MonoBehaviour
     // When the player enter the collider that directly to exit the room
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag(Helpers.Tag.Player))
         {
             EventHandlers.CallOnGetOutRoom(_gate);
         }

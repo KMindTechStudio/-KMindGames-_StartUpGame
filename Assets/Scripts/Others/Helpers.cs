@@ -15,4 +15,9 @@ public static class Helpers
         East = 2,
         West = 3
     }
+
+    public static class Tag
+    {
+        public const string Player = "Player";
+    }
 }

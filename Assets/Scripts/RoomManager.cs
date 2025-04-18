@@ -23,7 +23,7 @@ public class RoomManager : MonoBehaviour
     private void Awake()
     {
         _roomList = new List<Room>();
-        _player = GameObject.FindGameObjectWithTag("Player");
+        _player = GameObject.FindGameObjectWithTag(Helpers.Tag.Player);
 
         EventHandlers.OnGetOutRoom += OnGetOutRoom;
     }

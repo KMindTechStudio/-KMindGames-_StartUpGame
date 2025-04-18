@@ -7,7 +7,7 @@ public class InTriggerCheck : MonoBehaviour
     // when player exit the gate => move to the room
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.parent.CompareTag("Player"))
+        if (other.transform.parent.CompareTag(Helpers.Tag.Player))
         {
             EventHandlers.CallOnEnterRoom(_parent.Room);
         }
