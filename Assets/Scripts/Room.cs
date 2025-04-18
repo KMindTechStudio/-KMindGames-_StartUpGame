@@ -19,7 +19,7 @@ public class Room : MonoBehaviour
     private Gate _gateIn;
     private Gate _gateOut;
 
-    private void Start()
+    private void OnEnable()
     {
         EventHandlers.OnEnterRoom += OnEnterRoom;
     }
@@ -27,6 +27,8 @@ public class Room : MonoBehaviour
     {
         EventHandlers.OnEnterRoom -= OnEnterRoom;
     }
+
+    // when player enter the main room area 
     private void OnEnterRoom(Room room)
     {
         if (room != this) return;
@@ -37,6 +39,11 @@ public class Room : MonoBehaviour
         if (_gateOut != null) _gateOut.Lock(_isLocked);
     }
 
+    /// <summary>
+    /// Set up the room with the given RoomManager.
+    /// This method initializes the room's gates and colliders.
+    /// </summary>
+    /// <param name="roomManager"></param>
     public void SetUpRoom(RoomManager roomManager)
     {
         _roomManager = roomManager;
@@ -47,12 +54,19 @@ public class Room : MonoBehaviour
         SetUpColliders();
     }
 
+    /// <summary>
+    /// Set up the gates and colliders for the room.
+    /// The gates are set up based on the room ID and the previous room's gate position.
+    /// </summary>
     private void SetUpGate()
     {
         foreach (var gate in _gates)
         {
             gate.gameObject.SetActive(false);
         }
+
+        // If this is the first room, set the gate out position to East and disable the gate in
+        // because there is no previous room to enter from
         if (RoomID == 0)
         {
             _gateIn = null;
@@ -80,6 +94,11 @@ public class Room : MonoBehaviour
             _gateOut.Room = this;
         }
     }
+
+    /// <summary>
+    ///  Set up the colliders for the room walls and gates
+    /// The colliders are set up based on the gate positions and the wall segments
+    /// </summary>
     private void SetUpColliders()
     {
         /*
@@ -127,6 +146,13 @@ public class Room : MonoBehaviour
         if (_gateOutPosition != _gateInPosition)
             EnableGateColliders(_gateOutPosition);
     }
+
+    /// <summary>
+    /// Activates or deactivates a gate based on its position.
+    /// </summary>
+    /// <param name="gatePosition"></param>
+    /// <param name="active"></param>
+    /// <returns></returns>
     private Gate ActiveGate(GatePosition gatePosition, bool active = true)
     {
 
@@ -141,6 +167,12 @@ public class Room : MonoBehaviour
         }
         return null; // Return null if no matching gate is found
     }
+
+    /// <summary>
+    /// Get the opposite gate position based on the given gate position.
+    /// </summary>
+    /// <param name="gatePosition"></param>
+    /// <returns></returns>
     private GatePosition GetTheOppositeGatePosition(GatePosition gatePosition)
     {
         switch (gatePosition)

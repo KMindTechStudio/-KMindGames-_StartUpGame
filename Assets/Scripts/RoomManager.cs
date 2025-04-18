@@ -27,15 +27,14 @@ public class RoomManager : MonoBehaviour
 
         EventHandlers.OnGetOutRoom += OnGetOutRoom;
     }
-    private void OnDestroy()
-    {
-        EventHandlers.OnGetOutRoom -= OnGetOutRoom;
-    }
-
     private void Start()
     {
         _currentRoom = CreateRoom();
         FadeAndLoadRoom(_currentRoom.RoomID, new Vector3(0, 0, 0));
+    }
+    private void OnDestroy()
+    {
+        EventHandlers.OnGetOutRoom -= OnGetOutRoom;
     }
 
     private void OnGetOutRoom(Gate gate)
@@ -52,6 +51,12 @@ public class RoomManager : MonoBehaviour
         // Call fade and load the given room
         FadeAndLoadRoom(room.RoomID, gate.ConnectedGate.SpawnPoint.position);
     }
+
+    /// <summary>
+    /// Create a new room and add it to the list.
+    /// The new room will be inactive by default.
+    /// </summary>
+    /// <returns></returns>
     public Room CreateRoom()
     {
         GameObject newRoom = Instantiate(_roomPrefab, transform.position, Quaternion.identity);
@@ -65,11 +70,15 @@ public class RoomManager : MonoBehaviour
     }
 
     #region Fade and Load Room
+
+    // Call this method to fade and load the room only when not fading
     private void FadeAndLoadRoom(int roomIndex, Vector3 spawnPosition)
     {
         if (_isFading) return;
         StartCoroutine(FadeAndSwitchRoom(roomIndex, spawnPosition));
     }
+
+    // Switch room process 
     private IEnumerator FadeAndSwitchRoom(int roomIndex, Vector3 spawnPosition)
     {
         EventHandlers.CallOnBeforeRoomUnloadFadeOut();
@@ -102,19 +111,17 @@ public class RoomManager : MonoBehaviour
         // Call after room fade in event
         EventHandlers.CallOnAfterRoomFadeIn();
     }
+
+    // Load the room and set its active
     private void LoadAndActiveRoom(int roomIndex)
     {
         _currentRoom = _roomList[roomIndex];
         _currentRoom.gameObject.SetActive(true);
     }
+
+    // Fade animation
     private IEnumerator Fade(float alpha)
     {
-        // // Simulate fade out effect 
-        // _isFading = true;
-        // yield return new WaitForSeconds(alpha); // Simulate fade out time
-        // _isFading = false;
-
-        #region Commented out code with fade with the fadeCanvasGroup
         _isFading = true;
 
         // Make sure the CanvasGroup blocks raycasts so player can't interact with the UI
@@ -137,7 +144,6 @@ public class RoomManager : MonoBehaviour
 
         // Stop blocking raycasts so player can interact with the UI
         _fadeCanvasGroup.blocksRaycasts = false;
-        #endregion
     }
     #endregion
 }
