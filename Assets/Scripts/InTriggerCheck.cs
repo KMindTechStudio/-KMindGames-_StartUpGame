@@ -3,19 +3,13 @@ using UnityEngine;
 public class InTriggerCheck : MonoBehaviour
 {
     [SerializeField] private Gate _parent;
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            _parent.IsInTrigger = true;
-        }
-    }
 
+    // when player exit the gate => move to the room
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.transform.parent.CompareTag("Player"))
         {
-            _parent.IsInTrigger = false;
+            EventHandlers.CallOnEnterRoom(_parent.Room);
         }
     }
 }

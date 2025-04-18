@@ -3,8 +3,8 @@ using static Helpers;
 
 public class Gate : MonoBehaviour
 {
-    public bool IsInTrigger { get; set; } = false;
     public Room ConnectedRoom { get; set; }
+    public Room Room { get; set; }
     public Gate ConnectedGate { get; set; }
     public GatePosition GatePosition => _gatePosition;
     public Transform SpawnPoint => _spawnPoint;
@@ -26,4 +26,9 @@ public class Gate : MonoBehaviour
         gate2.ConnectedRoom = room1;
         gate2.ConnectedGate = this;
     }
+    public void Lock(bool isLocked)
+    {
+        _gateColliders[0].enabled = isLocked;
+    }
+
 }

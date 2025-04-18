@@ -11,20 +11,42 @@ public class Room : MonoBehaviour
     [Header("Static Variables")]
     [SerializeField] private GatePosition _gateInPosition;
     [SerializeField] private GatePosition _gateOutPosition;
-    [SerializeField] private GameObject _floor;
     [SerializeField] private GameObject[] _gates; // [0]: North, [1]: South, [2]: East, [3]: West
     [SerializeField] private Collider[] _wallColliders;
     [SerializeField] private bool _isLocked = false;
-    [SerializeField] private bool _isVisited = false;
+    [SerializeField] private bool _isCompleted = false;
     private RoomManager _roomManager;
     private Gate _gateIn;
     private Gate _gateOut;
+
+    private void Start()
+    {
+        EventHandlers.OnEnterRoom += OnEnterRoom;
+    }
+    private void OnDisable()
+    {
+        EventHandlers.OnEnterRoom -= OnEnterRoom;
+    }
+    private void OnEnterRoom(Room room)
+    {
+        if (room != this) return;
+
+        _isLocked = !_isCompleted;
+
+        if (_gateIn != null) _gateIn.Lock(_isLocked);
+        if (_gateOut != null) _gateOut.Lock(_isLocked);
+    }
+
     public void SetUpRoom(RoomManager roomManager)
     {
         _roomManager = roomManager;
+        _isCompleted = RoomID == 0; // start room is completed default
+        _isLocked = false;
+
         SetUpGate();
         SetUpColliders();
     }
+
     private void SetUpGate()
     {
         foreach (var gate in _gates)
@@ -36,6 +58,7 @@ public class Room : MonoBehaviour
             _gateIn = null;
             _gateOutPosition = GatePosition.East;
             _gateOut = ActiveGate(_gateOutPosition);
+            _gateOut.Room = this;
         }
         else
         {
@@ -52,6 +75,9 @@ public class Room : MonoBehaviour
             }
             _gateOutPosition = (GatePosition)randomGateOut;
             _gateOut = ActiveGate(_gateOutPosition);
+
+            _gateIn.Room = this;
+            _gateOut.Room = this;
         }
     }
     private void SetUpColliders()

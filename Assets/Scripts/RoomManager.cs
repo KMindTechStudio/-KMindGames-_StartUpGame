@@ -27,6 +27,11 @@ public class RoomManager : MonoBehaviour
 
         EventHandlers.OnGetOutRoom += OnGetOutRoom;
     }
+    private void OnDestroy()
+    {
+        EventHandlers.OnGetOutRoom -= OnGetOutRoom;
+    }
+
     private void Start()
     {
         _currentRoom = CreateRoom();
@@ -47,7 +52,6 @@ public class RoomManager : MonoBehaviour
         // Call fade and load the given room
         FadeAndLoadRoom(room.RoomID, gate.ConnectedGate.SpawnPoint.position);
     }
-
     public Room CreateRoom()
     {
         GameObject newRoom = Instantiate(_roomPrefab, transform.position, Quaternion.identity);
@@ -59,6 +63,8 @@ public class RoomManager : MonoBehaviour
         _roomList.Add(room);
         return room;
     }
+
+    #region Fade and Load Room
     private void FadeAndLoadRoom(int roomIndex, Vector3 spawnPosition)
     {
         if (_isFading) return;
@@ -133,4 +139,5 @@ public class RoomManager : MonoBehaviour
         _fadeCanvasGroup.blocksRaycasts = false;
         #endregion
     }
+    #endregion
 }

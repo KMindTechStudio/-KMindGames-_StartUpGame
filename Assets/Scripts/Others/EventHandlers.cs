@@ -3,10 +3,13 @@ using UnityEngine;
 
 public class EventHandlers : MonoBehaviour
 {
+    /// <summary>
+    /// Event when player move out of the gate that direction is towards to the other room.
+    /// </summary>
     public static event Action<Gate> OnGetOutRoom;
 
     /// <summary>
-    /// Call when the player gets out of the gate.
+    /// Call event when player move out of the gate that direction is towards to the other room.
     /// </summary>
     public static void CallOnGetOutRoom(Gate gate)
     {
@@ -14,17 +17,21 @@ public class EventHandlers : MonoBehaviour
         OnGetOutRoom?.Invoke(gate);
     }
 
-    public static event Action<Gate> OnEnterRoom;
+    /// <summary>
+    /// Event when player enter the main room area.
+    /// </summary>
+    public static event Action<Room> OnEnterRoom;
 
     /// <summary>
-    /// Call when the player enters the room.
+    /// Call event when the player enters the main room area.
     /// </summary>
     /// <param name="gate"></param>
-    public static void CallOnEnterRoom(Gate gate)
+    public static void CallOnEnterRoom(Room room)
     {
-        OnEnterRoom?.Invoke(gate);
+        OnEnterRoom?.Invoke(room);
     }
 
+    #region Room Load Events
     // Before the room unload fade out - Fade out event
     public static event Action OnBeforeRoomUnloadFadeOut;
     public static void CallOnBeforeRoomUnloadFadeOut()
@@ -49,6 +56,6 @@ public class EventHandlers : MonoBehaviour
     {
         OnAfterRoomFadeIn?.Invoke();
     }
-
+    #endregion
 
 }
