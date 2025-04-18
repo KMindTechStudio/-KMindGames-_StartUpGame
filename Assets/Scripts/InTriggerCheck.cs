@@ -2,16 +2,12 @@ using UnityEngine;
 
 public class InTriggerCheck : MonoBehaviour
 {
-    private Gate parent;
-    private void Awake()
-    {
-        parent = GetComponentInParent<Gate>();
-    }
+    [SerializeField] private Gate _parent;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            parent.IsInTrigger = true;
+            _parent.IsInTrigger = true;
         }
     }
 
@@ -19,7 +15,7 @@ public class InTriggerCheck : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            parent.IsInTrigger = false;
+            _parent.IsInTrigger = false;
         }
     }
 }

@@ -4,27 +4,27 @@ using static Helpers;
 
 public class Room : MonoBehaviour
 {
-    [Header("Static Variables")]
     public int RoomID { get; set; } = 0;
+    public Gate GateIn => _gateIn;
+    public Gate GateOut => _gateOut;
+
+    [Header("Static Variables")]
     [SerializeField] private GatePosition _gateInPosition;
     [SerializeField] private GatePosition _gateOutPosition;
     [SerializeField] private GameObject _floor;
     [SerializeField] private GameObject[] _gates; // [0]: North, [1]: South, [2]: East, [3]: West
-
     [SerializeField] private Collider[] _wallColliders;
     [SerializeField] private bool _isLocked = false;
     [SerializeField] private bool _isVisited = false;
     private RoomManager _roomManager;
-    private GameObject _gateIn;
-    private GameObject _gateOut;
-
+    private Gate _gateIn;
+    private Gate _gateOut;
     public void SetUpRoom(RoomManager roomManager)
     {
         _roomManager = roomManager;
         SetUpGate();
         SetUpColliders();
     }
-
     private void SetUpGate()
     {
         foreach (var gate in _gates)
@@ -41,7 +41,7 @@ public class Room : MonoBehaviour
         {
             // gateIn is the gate that player will enter the room
             // from the gate out of previous room
-            _gateInPosition = _roomManager.RoomList[RoomID - 1]._gateOutPosition;
+            _gateInPosition = GetTheOppositeGatePosition(_roomManager.RoomList[RoomID - 1]._gateOutPosition);
             _gateIn = ActiveGate(_gateInPosition);
 
             // randome gate out position except the gate in position
@@ -54,7 +54,6 @@ public class Room : MonoBehaviour
             _gateOut = ActiveGate(_gateOutPosition);
         }
     }
-
     private void SetUpColliders()
     {
         /*
@@ -102,20 +101,34 @@ public class Room : MonoBehaviour
         if (_gateOutPosition != _gateInPosition)
             EnableGateColliders(_gateOutPosition);
     }
-
-    private GameObject ActiveGate(GatePosition gatePosition, bool active = true)
+    private Gate ActiveGate(GatePosition gatePosition, bool active = true)
     {
+
+        foreach (var gate in _gates)
         {
-            foreach (var gate in _gates)
+            Gate gateObj = gate.GetComponent<Gate>();
+            if (gateObj.GatePosition == gatePosition)
             {
-                Gate gateObj = gate.GetComponent<Gate>();
-                if (gateObj.GatePosition == gatePosition)
-                {
-                    gate.SetActive(active);
-                    return gate;
-                }
+                gateObj.gameObject.SetActive(active);
+                return gateObj;
             }
-            return null; // Return null if no matching gate is found
+        }
+        return null; // Return null if no matching gate is found
+    }
+    private GatePosition GetTheOppositeGatePosition(GatePosition gatePosition)
+    {
+        switch (gatePosition)
+        {
+            case GatePosition.North:
+                return GatePosition.South;
+            case GatePosition.South:
+                return GatePosition.North;
+            case GatePosition.East:
+                return GatePosition.West;
+            case GatePosition.West:
+                return GatePosition.East;
+            default:
+                return GatePosition.None;
         }
     }
 }
