@@ -5,26 +5,25 @@ public class Gate : MonoBehaviour
 {
     public bool IsInTrigger { get; set; } = false;
     public Room ConnectedRoom { get; set; }
+    public Gate ConnectedGate { get; set; }
     public GatePosition GatePosition => _gatePosition;
+    public Transform SpawnPoint => _spawnPoint;
 
     [Header("Position")]
     [SerializeField] private GatePosition _gatePosition;
     [Space(10)]
+    [Header("Components")]
     [SerializeField] private Collider _boxCollider;
     [SerializeField] private Collider[] _gateColliders; // [0]: In, [1]: Out
-
+    [Space(10)]
     [Header("Preferences")]
     [SerializeField] private Transform _spawnPoint;
 
-    private void OnCollisionEnter(Collision other)
+    public void ConnectTo(Room room1, Room room2, Gate gate2)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            if (_gateColliders[1].bounds.Intersects(other.collider.bounds))
-            {
-                // Move the player to other room
-                EventHandlers.CallOnGetOutRoom(this);
-            }
-        }
+        ConnectedRoom = room2;
+        ConnectedGate = gate2;
+        gate2.ConnectedRoom = room1;
+        gate2.ConnectedGate = this;
     }
 }
