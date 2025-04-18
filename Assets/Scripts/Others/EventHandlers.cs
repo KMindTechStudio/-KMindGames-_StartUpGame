@@ -13,7 +13,6 @@ public class EventHandlers : MonoBehaviour
     /// </summary>
     public static void CallOnGetOutRoom(Gate gate)
     {
-        Debug.Log("CallOnGetOutRoom: " + gate.name);
         OnGetOutRoom?.Invoke(gate);
     }
 

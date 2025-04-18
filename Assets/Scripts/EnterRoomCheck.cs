@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InTriggerCheck : MonoBehaviour
+public class EnterRoomCheck : MonoBehaviour
 {
     [SerializeField] private Gate _parent;
 
