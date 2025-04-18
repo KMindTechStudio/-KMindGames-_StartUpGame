@@ -2,16 +2,27 @@ using UnityEngine;
 
 public class VirtualJoystick : MonoBehaviour
 {
-
+    [Header("Assign Virtual Joystick")]
     public RectTransform joystickBackground; // Background of the joystick
     public RectTransform joystickHandle; // Handle of the joystick
-    public Transform player; // Reference to the player
-    public float moveSpeed = 3f; // Speed of player movement
-    private Vector2 inputVector;
-    private float distance; // Distance from the joystick center to the touch point
-    public int maxDistance = 900; // Maximum distance for joystick movement
     public float joystickMoveThreshold = 1.0f; // Movement threshold
 
+    [Header("Player Settings")]
+    public Transform player; // Reference to the player
+    public float moveSpeed = 3f; // Speed of player movement
+    public float playerRotationX = 70f; // Rotation of the player
+
+    public Animator animator;
+
+    private Vector2 inputVector;
+    private float distance; // Distance from the joystick center to the touch point
+    private int maxDistance = 1000; // Maximum distance for joystick movement
+
+    public Vector3 moveDirection; // Direction of player movement
+    void Start()
+    {
+        
+    }
     private void Update()
     {
         // If touch or mouse input is detected
@@ -31,10 +42,14 @@ public class VirtualJoystick : MonoBehaviour
                 if (inputVector.magnitude > joystickMoveThreshold)
                 {
                     MovePlayer(inputVector.normalized);
+                    animator.SetBool("IsMoving", true);
+
                 }
                 else
                 {
                     MovePlayer(inputVector.normalized);
+                    animator.SetBool("IsMoving", true); 
+
                 }
 
             }
@@ -43,26 +58,31 @@ public class VirtualJoystick : MonoBehaviour
             {
                 joystickHandle.localPosition = Vector3.zero; // Reset joystick when not touched
                 inputVector = Vector2.zero;
+                animator.SetBool("IsMoving", false);
             }
         }
         else
         {
             joystickHandle.localPosition = Vector3.zero; // Reset joystick when not touched
             inputVector = Vector2.zero;
+            animator.SetBool("IsMoving", false);
         }
     }
 
-    private void MovePlayer(Vector2 direction)
+    public void MovePlayer(Vector2 direction)
     {
         // Move the player based on the joystick input (transformed y axis to z axis)
-        Vector3 moveDirection = new Vector3(direction.x, 0, direction.y);
+        moveDirection = new Vector3(direction.x, 0, direction.y);
         player.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
 
         // Rotate the player to face the movement direction
-        if (moveDirection != Vector3.zero)
+        if (direction.x <0)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            player.rotation = Quaternion.Slerp(player.rotation, targetRotation, Time.deltaTime * 10f);
+            player.rotation = Quaternion.Euler(playerRotationX, 0, 0);
+        }
+        if (direction.x > 0)
+        {
+            player.rotation = Quaternion.Euler(-playerRotationX, 180, 0);
         }
     }
 }
