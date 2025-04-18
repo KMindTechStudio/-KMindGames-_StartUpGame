@@ -39,7 +39,7 @@ public class RoomManager : MonoBehaviour
 
     private void OnGetOutRoom(Gate gate)
     {
-        Room? room = gate.ConnectedRoom;
+        Room room = gate.ConnectedRoom;
 
         // Check if the gate is connected to another room
         if (room == null)
