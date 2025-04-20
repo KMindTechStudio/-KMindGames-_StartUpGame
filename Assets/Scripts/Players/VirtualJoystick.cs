@@ -3,25 +3,27 @@ using UnityEngine;
 public class VirtualJoystick : MonoBehaviour
 {
     [Header("Assign Virtual Joystick")]
-    public RectTransform joystickBackground; // Background of the joystick
-    public RectTransform joystickHandle; // Handle of the joystick
+    public RectTransform joystickBackground; 
+    public RectTransform joystickHandle; 
     public float joystickMoveThreshold = 1.0f; // Movement threshold
 
     [Header("Player Settings")]
-    public Transform player; // Reference to the player
-    public float moveSpeed = 3f; // Speed of player movement
-    public float playerRotationX = 70f; // Rotation of the player
+    private GameObject playerObject; 
+    private Transform player; 
+    public float moveSpeed = 3f; 
+    public float playerRotationX = 70f; 
 
     public Animator animator;
 
     private Vector2 inputVector;
     private float distance; // Distance from the joystick center to the touch point
-    private int maxDistance = 1000; // Maximum distance for joystick movement
+    private int maxDistance = 1000; 
 
     public Vector3 moveDirection; // Direction of player movement
     void Start()
     {
-        
+        playerObject = GameObject.FindGameObjectWithTag("player");
+        player = playerObject.transform; 
     }
     private void Update()
     {
@@ -63,7 +65,7 @@ public class VirtualJoystick : MonoBehaviour
         }
         else
         {
-            joystickHandle.localPosition = Vector3.zero; // Reset joystick when not touched
+            joystickHandle.localPosition = Vector3.zero; 
             inputVector = Vector2.zero;
             animator.SetBool("IsMoving", false);
         }
