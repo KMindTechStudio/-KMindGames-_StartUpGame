@@ -30,6 +30,12 @@ public class EventHandlers : MonoBehaviour
         OnEnterRoom?.Invoke(room);
     }
 
+    public static event Action<Room> OnCompleteRoom;
+    public static void CallOnCompleteRoom(Room room)
+    {
+        OnCompleteRoom?.Invoke(room);
+    }
+
     #region Room Load Events
     // Before the room unload fade out - Fade out event
     public static event Action OnBeforeRoomUnloadFadeOut;

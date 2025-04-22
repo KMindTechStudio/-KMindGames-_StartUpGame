@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Helpers;
+using Sirenix.OdinInspector;
 
 public class Room : MonoBehaviour
 {
@@ -14,18 +15,40 @@ public class Room : MonoBehaviour
     [SerializeField] private GameObject[] _gates; // [0]: North, [1]: South, [2]: East, [3]: West
     [SerializeField] private Collider[] _wallColliders;
     [SerializeField] private bool _isLocked = false;
-    [SerializeField] private bool _isCompleted = false;
+
+    [SerializeField, HorizontalGroup("CompleteGroup", Width = 150)]
+    private bool _isCompleted = false;
     private RoomManager _roomManager;
     private Gate _gateIn;
     private Gate _gateOut;
 
+    [Button, HorizontalGroup("CompleteGroup")]
+    private void CompleteRoom()
+    {
+        EventHandlers.CallOnCompleteRoom(this);
+    }
+
     private void OnEnable()
     {
         EventHandlers.OnEnterRoom += OnEnterRoom;
+        EventHandlers.OnCompleteRoom += OnCompleteRoom;
     }
+
+    private void OnCompleteRoom(Room room)
+    {
+        if (room != this) return;
+
+        _isCompleted = true;
+        _isLocked = false;
+
+        if (_gateIn != null) _gateIn.Lock(_isLocked);
+        if (_gateOut != null) _gateOut.Lock(_isLocked);
+    }
+
     private void OnDisable()
     {
         EventHandlers.OnEnterRoom -= OnEnterRoom;
+        EventHandlers.OnCompleteRoom -= OnCompleteRoom;
     }
 
     // when player enter the main room area 
