@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Helpers;
-using Sirenix.OdinInspector;
 
 public class Room : MonoBehaviour
 {
@@ -16,13 +15,11 @@ public class Room : MonoBehaviour
     [SerializeField] private Collider[] _wallColliders;
     [SerializeField] private bool _isLocked = false;
 
-    [SerializeField, HorizontalGroup("CompleteGroup", Width = 150)]
     private bool _isCompleted = false;
     private RoomManager _roomManager;
     private Gate _gateIn;
     private Gate _gateOut;
 
-    [Button, HorizontalGroup("CompleteGroup")]
     private void CompleteRoom()
     {
         EventHandlers.CallOnCompleteRoom(this);
