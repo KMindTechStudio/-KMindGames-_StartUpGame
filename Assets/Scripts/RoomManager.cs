@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class RoomManager : MonoBehaviour
 {
+    public Room LastestTowerRoom { get; set; }
     public List<Room> RoomList => _roomList;
     [SerializeField] private GameObject _roomPrefab;
 
@@ -26,7 +27,9 @@ public class RoomManager : MonoBehaviour
         _roomList = new List<Room>();
         _player = GameObject.FindGameObjectWithTag(Helpers.Tag.Player);
         EventHandlers.OnGetOutRoom += OnGetOutRoom;
+        EventHandlers.OnPlayerDie += OnPlayerDie;
     }
+
     private void Start()
     {
         _nextTowerCounter = 1;
@@ -37,7 +40,6 @@ public class RoomManager : MonoBehaviour
     {
         EventHandlers.OnGetOutRoom -= OnGetOutRoom;
     }
-
     private void OnGetOutRoom(Gate gate)
     {
         Room room = gate.ConnectedRoom;
@@ -52,7 +54,13 @@ public class RoomManager : MonoBehaviour
         // Call fade and load the given room
         FadeAndLoadRoom(room.RoomID, gate.ConnectedGate.SpawnPoint.position);
     }
-
+    private void OnPlayerDie()
+    {
+        // Reset current room state
+        _currentRoom.ResetRoom();
+        // Fade aand load to thelastest room that has tower checkpoint
+        FadeAndLoadRoom(LastestTowerRoom.RoomID, LastestTowerRoom.ReviveTransform.position);
+    }
     /// <summary>
     /// Create a new room and add it to the list.
     /// The new room will be inactive by default.
@@ -69,7 +77,6 @@ public class RoomManager : MonoBehaviour
         _roomList.Add(room);
         return room;
     }
-
     private bool ShouldHasTowerCheckPoint()
     {
         bool hasTower = _nextTowerCounter == 1;

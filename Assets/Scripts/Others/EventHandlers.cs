@@ -3,6 +3,21 @@ using UnityEngine;
 
 public class EventHandlers : MonoBehaviour
 {
+
+    #region Player Events
+    /// <summary>
+    /// Event when player die.
+    /// </summary>
+    public static event Action OnPlayerDie;
+    /// <summary>
+    /// Caall event when player die.
+    /// </summary>
+    public static void CallOnPlayerDie()
+    {
+        OnPlayerDie?.Invoke();
+    }
+    #endregion
+    #region Room Events
     /// <summary>
     /// Event when player move out of the gate that direction is towards to the other room.
     /// </summary>
@@ -62,5 +77,5 @@ public class EventHandlers : MonoBehaviour
         OnAfterRoomFadeIn?.Invoke();
     }
     #endregion
-
+    #endregion
 }

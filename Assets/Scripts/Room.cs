@@ -5,6 +5,7 @@ using static Helpers;
 public class Room : MonoBehaviour
 {
     public int RoomID { get; set; } = 0;
+    public Transform ReviveTransform => _reviveTransform;
     public Gate GateIn => _gateIn;
     public Gate GateOut => _gateOut;
 
@@ -14,6 +15,7 @@ public class Room : MonoBehaviour
     [SerializeField] private GameObject[] _gates; // [0]: North, [1]: South, [2]: East, [3]: West
     [SerializeField] private Collider[] _wallColliders;
     [SerializeField] private Transform _towerTransform;
+    [SerializeField] private Transform _reviveTransform;
 
     [Header("Variables")]
     [SerializeField] private bool _isLocked = false;
@@ -21,18 +23,28 @@ public class Room : MonoBehaviour
     private RoomManager _roomManager;
     private Gate _gateIn;
     private Gate _gateOut;
+    private bool _hasTower = false;
+
+    #region TODO: TEST COMPLETE ROOM 
+    private void Update()
+    {
+        if (_isCompleted)
+        {
+            CompleteRoom();
+        }
+    }
 
     private void CompleteRoom()
     {
         EventHandlers.CallOnCompleteRoom(this);
     }
+    #endregion
 
     private void OnEnable()
     {
         EventHandlers.OnEnterRoom += OnEnterRoom;
         EventHandlers.OnCompleteRoom += OnCompleteRoom;
     }
-
     private void OnCompleteRoom(Room room)
     {
         if (room != this) return;
@@ -42,8 +54,9 @@ public class Room : MonoBehaviour
 
         if (_gateIn != null) _gateIn.Lock(_isLocked);
         if (_gateOut != null) _gateOut.Lock(_isLocked);
-    }
 
+        if (_hasTower) _roomManager.LastestTowerRoom = this;
+    }
     private void OnDisable()
     {
         EventHandlers.OnEnterRoom -= OnEnterRoom;
@@ -53,7 +66,7 @@ public class Room : MonoBehaviour
     // when player enter the main room area 
     private void OnEnterRoom(Room room)
     {
-        return; // TODO: TEST FOR NON CHECKING TO LOCK ROOM
+        // return; // TODO: TEST FOR NON CHECKING TO LOCK ROOM
         if (room != this) return;
 
         _isLocked = !_isCompleted;
@@ -62,6 +75,20 @@ public class Room : MonoBehaviour
         if (_gateOut != null) _gateOut.Lock(_isLocked);
     }
 
+    /// <summary>
+    /// Resets the room to its initial state.
+    /// </summary>
+    public void ResetRoom()
+    {
+        // Reset the room state to its initial values
+        _isCompleted = false;
+        _isLocked = false;
+
+        if (_gateIn != null) _gateIn.Lock(_isLocked);
+        if (_gateOut != null) _gateOut.Lock(_isLocked);
+
+        //Reset enemy and tower state
+    }
     /// <summary>
     /// Set up the room with the given RoomManager.
     /// This method initializes the room's gates and colliders.
@@ -80,6 +107,7 @@ public class Room : MonoBehaviour
 
     private void SetUpTower()
     {
+        _hasTower = true;
         _towerTransform.gameObject.SetActive(true);
     }
 
