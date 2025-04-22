@@ -8,14 +8,16 @@ public class Room : MonoBehaviour
     public Gate GateIn => _gateIn;
     public Gate GateOut => _gateOut;
 
-    [Header("Static Variables")]
+    [Header("Children")]
     [SerializeField] private GatePosition _gateInPosition;
     [SerializeField] private GatePosition _gateOutPosition;
     [SerializeField] private GameObject[] _gates; // [0]: North, [1]: South, [2]: East, [3]: West
     [SerializeField] private Collider[] _wallColliders;
-    [SerializeField] private bool _isLocked = false;
+    [SerializeField] private Transform _towerTransform;
 
-    private bool _isCompleted = false;
+    [Header("Variables")]
+    [SerializeField] private bool _isLocked = false;
+    [SerializeField] private bool _isCompleted = false;
     private RoomManager _roomManager;
     private Gate _gateIn;
     private Gate _gateOut;
@@ -51,6 +53,7 @@ public class Room : MonoBehaviour
     // when player enter the main room area 
     private void OnEnterRoom(Room room)
     {
+        return; // TODO: TEST FOR NON CHECKING TO LOCK ROOM
         if (room != this) return;
 
         _isLocked = !_isCompleted;
@@ -64,7 +67,7 @@ public class Room : MonoBehaviour
     /// This method initializes the room's gates and colliders.
     /// </summary>
     /// <param name="roomManager"></param>
-    public void SetUpRoom(RoomManager roomManager)
+    public void SetUpRoom(RoomManager roomManager, bool hasTower)
     {
         _roomManager = roomManager;
         _isCompleted = RoomID == 0; // start room is completed default
@@ -72,6 +75,12 @@ public class Room : MonoBehaviour
 
         SetUpGate();
         SetUpColliders();
+        if (hasTower) SetUpTower();
+    }
+
+    private void SetUpTower()
+    {
+        _towerTransform.gameObject.SetActive(true);
     }
 
     /// <summary>

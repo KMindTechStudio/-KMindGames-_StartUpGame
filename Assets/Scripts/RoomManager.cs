@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +14,9 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private Image _fadeImage;
     [SerializeField] private float _fadeDuration = 0.5f;
     [SerializeField] private CanvasGroup _fadeCanvasGroup;
+    [Header("Tower Check Point")]
+    [SerializeField] private Vector2 _nextHasTowerRound;
+    private int _nextTowerCounter = 0;
     private bool _isFading = false;
     private List<Room> _roomList;
     private Room _currentRoom;
@@ -24,12 +25,12 @@ public class RoomManager : MonoBehaviour
     {
         _roomList = new List<Room>();
         _player = GameObject.FindGameObjectWithTag(Helpers.Tag.Player);
-
         EventHandlers.OnGetOutRoom += OnGetOutRoom;
     }
     private void Start()
     {
-        _currentRoom = CreateRoom();
+        _nextTowerCounter = 1;
+        _currentRoom = CreateRoom(ShouldHasTowerCheckPoint());
         FadeAndLoadRoom(_currentRoom.RoomID, new Vector3(0, 0, 0));
     }
     private void OnDestroy()
@@ -44,7 +45,7 @@ public class RoomManager : MonoBehaviour
         // Check if the gate is connected to another room
         if (room == null)
         {
-            room = CreateRoom();
+            room = CreateRoom(ShouldHasTowerCheckPoint());
             gate.ConnectTo(_currentRoom, room, room.GateIn);
         }
 
@@ -57,18 +58,33 @@ public class RoomManager : MonoBehaviour
     /// The new room will be inactive by default.
     /// </summary>
     /// <returns></returns>
-    public Room CreateRoom()
+    public Room CreateRoom(bool hasTower = false)
     {
         GameObject newRoom = Instantiate(_roomPrefab, transform.position, Quaternion.identity);
         Room room = newRoom.GetComponent<Room>();
         room.RoomID = _roomList.Count;
         newRoom.name = "Room " + room.RoomID;
-        room.SetUpRoom(this);
+        room.SetUpRoom(this, hasTower);
         room.gameObject.SetActive(false);
         _roomList.Add(room);
         return room;
     }
 
+    private bool ShouldHasTowerCheckPoint()
+    {
+        bool hasTower = _nextTowerCounter == 1;
+
+        if (hasTower)
+        {
+            _nextTowerCounter = Random.Range((int)_nextHasTowerRound.x, (int)_nextHasTowerRound.y + 1);
+        }
+        else
+        {
+            _nextTowerCounter--;
+        }
+
+        return hasTower;
+    }
     #region Fade and Load Room
 
     // Call this method to fade and load the room only when not fading
