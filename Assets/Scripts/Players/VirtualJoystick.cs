@@ -4,7 +4,8 @@ public class VirtualJoystick : MonoBehaviour
 {
     [Header("Assign Virtual Joystick")]
     public RectTransform joystickBackground; 
-    public RectTransform joystickHandle; 
+    public RectTransform joystickHandle;
+    public RectTransform joystickEffect;
     public float joystickMoveThreshold = 1.0f; // Movement threshold
 
     [Header("Player Settings")]
@@ -13,7 +14,7 @@ public class VirtualJoystick : MonoBehaviour
     public float moveSpeed = 3f; 
     public float playerRotationX = 70f; 
 
-    public Animator animator;
+    private Animator animator;
 
     private Vector2 inputVector;
     private float distance; // Distance from the joystick center to the touch point
@@ -22,8 +23,9 @@ public class VirtualJoystick : MonoBehaviour
     public Vector3 moveDirection; // Direction of player movement
     void Start()
     {
-        playerObject = GameObject.FindGameObjectWithTag("player");
+        playerObject = GameObject.FindGameObjectWithTag("Player");
         player = playerObject.transform; 
+        animator = player.GetComponent<Animator>();
     }
     private void Update()
     {
@@ -39,18 +41,26 @@ public class VirtualJoystick : MonoBehaviour
             // If the distance is less than the maximum distance, move the joystick handle
             if (distance < maxDistance)
             {
+                Vector2 direction = joystickHandle.anchoredPosition - joystickBackground.anchoredPosition;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                // Rotate the joystick effect to match the angle of the joystick handle
+                joystickEffect.rotation = Quaternion.Euler(0, 0, angle-45);
+
                 inputVector = Vector2.ClampMagnitude(mousePosition - joystickPosition, joystickBackground.sizeDelta.x * 0.5f);
                 joystickHandle.localPosition = inputVector;
                 if (inputVector.magnitude > joystickMoveThreshold)
                 {
                     MovePlayer(inputVector.normalized);
                     animator.SetBool("IsMoving", true);
+                    joystickEffect.gameObject.SetActive(true); // Show joystick effect when moving
 
                 }
                 else
                 {
                     MovePlayer(inputVector.normalized);
-                    animator.SetBool("IsMoving", true); 
+                    animator.SetBool("IsMoving", true);
+                    joystickEffect.gameObject.SetActive(true); // Show joystick effect when moving
 
                 }
 
@@ -61,6 +71,7 @@ public class VirtualJoystick : MonoBehaviour
                 joystickHandle.localPosition = Vector3.zero; // Reset joystick when not touched
                 inputVector = Vector2.zero;
                 animator.SetBool("IsMoving", false);
+                joystickEffect.gameObject.SetActive(false); 
             }
         }
         else
@@ -68,6 +79,7 @@ public class VirtualJoystick : MonoBehaviour
             joystickHandle.localPosition = Vector3.zero; 
             inputVector = Vector2.zero;
             animator.SetBool("IsMoving", false);
+            joystickEffect.gameObject.SetActive(false);
         }
     }
 
