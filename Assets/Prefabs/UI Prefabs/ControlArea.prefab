@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 7632322306841401044}
   - component: {fileID: 6711805419442443574}
   - component: {fileID: 5878370712043189012}
+  - component: {fileID: 8766994247877683973}
   m_Layer: 5
   m_Name: btn_Dash
   m_TagString: Untagged
@@ -197,6 +198,24 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8766994247877683973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2458248014403957171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d82307b43866b2f4d8c10d7a4b61ba78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashForce: 20
+  dashDuration: 0.15
+  dashCooldown: 1
+  img_DashCooldown: {fileID: 1600018798565367604}
+  txt_DashCooldown: {fileID: 2242262406132243191}
+  btn_Dash: {fileID: 5878370712043189012}
 --- !u!1 &2776475184505587734
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,7 +655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2772625252648248062
 RectTransform:
   m_ObjectHideFlags: 0
@@ -689,8 +708,8 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
+  m_FillAmount: 0.386
+  m_FillClockwise: 0
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
@@ -1264,7 +1283,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2816348012573034045
 RectTransform:
   m_ObjectHideFlags: 0
