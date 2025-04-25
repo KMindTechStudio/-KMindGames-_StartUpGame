@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,8 +34,11 @@ public class RoomManager : MonoBehaviour
     private void Start()
     {
         _nextTowerCounter = 1;
-        _currentRoom = CreateRoom(ShouldHasTowerCheckPoint());
-        FadeAndLoadRoom(_currentRoom.RoomID, new Vector3(0, 0, 0));
+        _currentRoom = CreateRoom(ShouldHasTowerCheckPoint(), true);
+        FadeAndLoadRoom(_currentRoom.RoomID, new Vector3(0, 0, 0), () =>
+        {
+            EventHandlers.CallOnActivateTower(_currentRoom);
+        });
     }
     private void OnDestroy()
     {
@@ -58,21 +62,23 @@ public class RoomManager : MonoBehaviour
     {
         // Reset current room state
         _currentRoom.ResetRoom();
-        // Fade aand load to thelastest room that has tower checkpoint
+        // Fade and load to thelastest room that has tower checkpoint
         FadeAndLoadRoom(LastestTowerRoom.RoomID, LastestTowerRoom.ReviveTransform.position);
+        // Set the lastest tower room to the start room
+        LastestTowerRoom = _roomList[0];
     }
     /// <summary>
     /// Create a new room and add it to the list.
     /// The new room will be inactive by default.
     /// </summary>
     /// <returns></returns>
-    public Room CreateRoom(bool hasTower = false)
+    public Room CreateRoom(bool hasTower = false, bool isActivateTower = false)
     {
         GameObject newRoom = Instantiate(_roomPrefab, transform.position, Quaternion.identity);
         Room room = newRoom.GetComponent<Room>();
         room.RoomID = _roomList.Count;
         newRoom.name = "Room " + room.RoomID;
-        room.SetUpRoom(this, hasTower);
+        room.SetUpRoom(this, hasTower, isActivateTower);
         room.gameObject.SetActive(false);
         _roomList.Add(room);
         return room;
@@ -83,7 +89,7 @@ public class RoomManager : MonoBehaviour
 
         if (hasTower)
         {
-            _nextTowerCounter = Random.Range((int)_nextHasTowerRound.x, (int)_nextHasTowerRound.y + 1);
+            _nextTowerCounter = UnityEngine.Random.Range((int)_nextHasTowerRound.x, (int)_nextHasTowerRound.y + 1);
         }
         else
         {
@@ -95,14 +101,14 @@ public class RoomManager : MonoBehaviour
     #region Fade and Load Room
 
     // Call this method to fade and load the room only when not fading
-    private void FadeAndLoadRoom(int roomIndex, Vector3 spawnPosition)
+    private void FadeAndLoadRoom(int roomIndex, Vector3 spawnPosition, Action callback = null)
     {
         if (_isFading) return;
-        StartCoroutine(FadeAndSwitchRoom(roomIndex, spawnPosition));
+        StartCoroutine(FadeAndSwitchRoom(roomIndex, spawnPosition, callback));
     }
 
     // Switch room process 
-    private IEnumerator FadeAndSwitchRoom(int roomIndex, Vector3 spawnPosition)
+    private IEnumerator FadeAndSwitchRoom(int roomIndex, Vector3 spawnPosition, Action callback = null)
     {
         EventHandlers.CallOnBeforeRoomUnloadFadeOut();
 
@@ -128,6 +134,9 @@ public class RoomManager : MonoBehaviour
 
         // Set player position to spawn position
         _player.transform.position = spawnPosition;
+
+        // Callback Action
+        callback?.Invoke();
 
         yield return StartCoroutine(Fade(0f));
 

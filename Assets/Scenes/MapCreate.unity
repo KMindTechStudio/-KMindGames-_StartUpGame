@@ -129,7 +129,6 @@ GameObject:
   m_Component:
   - component: {fileID: 302718414}
   - component: {fileID: 302718416}
-  - component: {fileID: 302718415}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -145,34 +144,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 302718413}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0.35, z: 0.35}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1367719058}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &302718415
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 302718413}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 0.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!212 &302718416
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -363,7 +341,7 @@ MonoBehaviour:
   _fadeImage: {fileID: 1696064473}
   _fadeDuration: 1
   _fadeCanvasGroup: {fileID: 1696064472}
-  _nextHasTowerRound: {x: 7, y: 10}
+  _nextHasTowerRound: {x: 2, y: 3}
 --- !u!4 &582512174
 Transform:
   m_ObjectHideFlags: 0
@@ -590,6 +568,7 @@ GameObject:
   - component: {fileID: 1367719058}
   - component: {fileID: 1367719057}
   - component: {fileID: 1367719056}
+  - component: {fileID: 1367719059}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -619,7 +598,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -638,6 +617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   rotationSpeed: 720
+  Dead: 0
 --- !u!4 &1367719058
 Transform:
   m_ObjectHideFlags: 0
@@ -654,6 +634,27 @@ Transform:
   - {fileID: 302718414}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1367719059
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367719055}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &1696064470
 GameObject:
   m_ObjectHideFlags: 0
