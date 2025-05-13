@@ -1,0 +1,87 @@
+nv chính.png
+size:1971,1674
+filter:Linear,Linear
+pma:true
+Group 1
+bounds:1547,1049,249,218
+Group 4 - Copy
+bounds:1547,827,245,220
+Group 4
+bounds:1547,827,245,220
+Layer 7
+bounds:1859,1359,106,53
+offsets:1,1,108,55
+Layer 8
+bounds:1722,32,211,65
+offsets:0,0,211,66
+Layer 9
+bounds:1648,583,112,64
+offsets:0,0,113,64
+arm left
+bounds:1859,1227,104,130
+offsets:2,1,107,132
+arm right
+bounds:1347,19,127,147
+offsets:1,3,129,151
+rotate:90
+back hair
+bounds:2,646,1026,640
+rotate:90
+body
+bounds:1547,1414,258,383
+offsets:0,1,258,384
+rotate:90
+eyebrows_left
+bounds:1516,560,94,87
+offsets:1,1,96,89
+eyebrows_right
+bounds:1496,30,150,116
+offsets:1,1,152,118
+front hair
+bounds:798,148,716,531
+hand
+bounds:1798,1042,183,171
+offsets:1,1,185,173
+rotate:90
+hand right
+bounds:1728,99,218,192
+offsets:1,1,220,194
+head
+bounds:2,3,794,641
+offsets:1,1,796,643
+hip
+bounds:1547,649,236,176
+offsets:1,1,238,178
+left arm
+bounds:1612,355,157,226
+left eye
+bounds:1794,710,117,166
+rotate:90
+left eye_cir
+bounds:1648,2,72,149
+offsets:1,1,74,151
+leg_left
+bounds:1126,11,135,219
+rotate:90
+leg_right
+bounds:897,10,136,227
+offsets:2,0,138,227
+rotate:90
+necklace
+bounds:1771,293,195,201
+paint weapon
+bounds:644,681,901,991
+right arm
+bounds:1516,153,200,210
+rotate:90
+right eye
+bounds:1794,829,211,169
+rotate:90
+right_cir
+bounds:798,3,97,143
+offsets:1,1,99,145
+tay áo khoác
+bounds:1785,496,176,212
+offsets:0,1,176,213
+áo hông
+bounds:1547,1269,310,143
