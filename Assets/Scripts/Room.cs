@@ -5,32 +5,84 @@ using static Helpers;
 public class Room : MonoBehaviour
 {
     public int RoomID { get; set; } = 0;
+    public Transform ReviveTransform => _reviveTransform;
     public Gate GateIn => _gateIn;
     public Gate GateOut => _gateOut;
 
-    [Header("Static Variables")]
+    [Header("Children")]
     [SerializeField] private GatePosition _gateInPosition;
     [SerializeField] private GatePosition _gateOutPosition;
     [SerializeField] private GameObject[] _gates; // [0]: North, [1]: South, [2]: East, [3]: West
     [SerializeField] private Collider[] _wallColliders;
+    [SerializeField] private Transform _towerTransform;
+    [SerializeField] private Transform _reviveTransform;
+
+    [Header("Variables")]
     [SerializeField] private bool _isLocked = false;
     [SerializeField] private bool _isCompleted = false;
     private RoomManager _roomManager;
     private Gate _gateIn;
     private Gate _gateOut;
+    private Tower _tower;
+    private bool _hasTower = false;
+
+
+    #region TODO: TEST COMPLETE ROOM 
+    private void Update()
+    {
+        if (_isCompleted)
+        {
+            CompleteRoom();
+        }
+    }
+
+    private void CompleteRoom()
+    {
+        EventHandlers.CallOnCompleteRoom(this);
+    }
+    #endregion
 
     private void OnEnable()
     {
         EventHandlers.OnEnterRoom += OnEnterRoom;
+        EventHandlers.OnCompleteRoom += OnCompleteRoom;
+        EventHandlers.OnActivateTower += OnActivateTower;
+    }
+
+    private void Awake()
+    {
+        _tower = _towerTransform.GetComponent<Tower>();
+        _towerTransform.gameObject.SetActive(false);
+    }
+
+    private void OnActivateTower(Room room)
+    {
+        if (room != this) return;
+        _roomManager.LastestTowerRoom = this;
+    }
+    private void OnCompleteRoom(Room room)
+    {
+        if (room != this) return;
+
+        _isCompleted = true;
+        _isLocked = false;
+
+        if (_gateIn != null) _gateIn.Lock(_isLocked);
+        if (_gateOut != null) _gateOut.Lock(_isLocked);
+
+        if (_hasTower) _tower.Interactive(true);
     }
     private void OnDisable()
     {
         EventHandlers.OnEnterRoom -= OnEnterRoom;
+        EventHandlers.OnCompleteRoom -= OnCompleteRoom;
+        EventHandlers.OnActivateTower -= OnActivateTower;
     }
 
     // when player enter the main room area 
     private void OnEnterRoom(Room room)
     {
+        // return; // TODO: TEST FOR NON CHECKING TO LOCK ROOM
         if (room != this) return;
 
         _isLocked = !_isCompleted;
@@ -40,11 +92,25 @@ public class Room : MonoBehaviour
     }
 
     /// <summary>
+    /// Resets the room to its initial state.
+    /// </summary>
+    public void ResetRoom()
+    {
+        if (_isCompleted) return;
+        // Reset the room state to its initial values
+        _isLocked = false;
+
+        if (_gateIn != null) _gateIn.Lock(_isLocked);
+        if (_gateOut != null) _gateOut.Lock(_isLocked);
+
+        //Reset enemy and tower state
+    }
+    /// <summary>
     /// Set up the room with the given RoomManager.
     /// This method initializes the room's gates and colliders.
     /// </summary>
     /// <param name="roomManager"></param>
-    public void SetUpRoom(RoomManager roomManager)
+    public void SetUpRoom(RoomManager roomManager, bool hasTower, bool isActivateTower = false)
     {
         _roomManager = roomManager;
         _isCompleted = RoomID == 0; // start room is completed default
@@ -52,6 +118,14 @@ public class Room : MonoBehaviour
 
         SetUpGate();
         SetUpColliders();
+        if (hasTower) SetUpTower(isActivateTower);
+    }
+    private void SetUpTower(bool isActivateTower)
+    {
+        _towerTransform.gameObject.SetActive(true);
+        _hasTower = true;
+        _tower.Room = this;
+        _tower.Interactive(isActivateTower);
     }
 
     /// <summary>

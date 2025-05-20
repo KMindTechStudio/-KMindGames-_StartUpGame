@@ -3,6 +3,21 @@ using UnityEngine;
 
 public class EventHandlers : MonoBehaviour
 {
+
+    #region Player Events
+    /// <summary>
+    /// Event when player die.
+    /// </summary>
+    public static event Action OnPlayerDie;
+    /// <summary>
+    /// Caall event when player die.
+    /// </summary>
+    public static void CallOnPlayerDie()
+    {
+        OnPlayerDie?.Invoke();
+    }
+    #endregion
+    #region Room Events
     /// <summary>
     /// Event when player move out of the gate that direction is towards to the other room.
     /// </summary>
@@ -28,6 +43,18 @@ public class EventHandlers : MonoBehaviour
     public static void CallOnEnterRoom(Room room)
     {
         OnEnterRoom?.Invoke(room);
+    }
+
+    public static event Action<Room> OnCompleteRoom;
+    public static void CallOnCompleteRoom(Room room)
+    {
+        OnCompleteRoom?.Invoke(room);
+    }
+
+    public static event Action<Room> OnActivateTower;
+    public static void CallOnActivateTower(Room room)
+    {
+        OnActivateTower?.Invoke(room);
     }
 
     #region Room Load Events
@@ -56,5 +83,5 @@ public class EventHandlers : MonoBehaviour
         OnAfterRoomFadeIn?.Invoke();
     }
     #endregion
-
+    #endregion
 }
