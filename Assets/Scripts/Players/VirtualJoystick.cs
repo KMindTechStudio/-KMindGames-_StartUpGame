@@ -1,10 +1,12 @@
+using Spine.Unity;
 using UnityEngine;
 
 public class VirtualJoystick : MonoBehaviour
 {
     [Header("Assign Virtual Joystick")]
     public RectTransform joystickBackground; 
-    public RectTransform joystickHandle; 
+    public RectTransform joystickHandle;
+    public RectTransform joystickEffect;
     public float joystickMoveThreshold = 1.0f; // Movement threshold
 
     [Header("Player Settings")]
@@ -13,7 +15,8 @@ public class VirtualJoystick : MonoBehaviour
     public float moveSpeed = 3f; 
     public float playerRotationX = 70f; 
 
-    public Animator animator;
+    private SkeletonAnimation animation;
+    private string currentAnimation;
 
     private Vector2 inputVector;
     private float distance; // Distance from the joystick center to the touch point
@@ -22,8 +25,10 @@ public class VirtualJoystick : MonoBehaviour
     public Vector3 moveDirection; // Direction of player movement
     void Start()
     {
-        playerObject = GameObject.FindGameObjectWithTag("player");
+        playerObject = GameObject.FindGameObjectWithTag("Player");
         player = playerObject.transform; 
+        animation = player.GetComponent<SkeletonAnimation>();
+        SetAnimation("idle", true);
     }
     private void Update()
     {
@@ -39,19 +44,21 @@ public class VirtualJoystick : MonoBehaviour
             // If the distance is less than the maximum distance, move the joystick handle
             if (distance < maxDistance)
             {
+                Vector2 direction = joystickHandle.anchoredPosition - joystickBackground.anchoredPosition;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                // Rotate the joystick effect to match the angle of the joystick handle
+                joystickEffect.rotation = Quaternion.Euler(0, 0, angle-45);
+
                 inputVector = Vector2.ClampMagnitude(mousePosition - joystickPosition, joystickBackground.sizeDelta.x * 0.5f);
                 joystickHandle.localPosition = inputVector;
                 if (inputVector.magnitude > joystickMoveThreshold)
                 {
                     MovePlayer(inputVector.normalized);
-                    animator.SetBool("IsMoving", true);
-
                 }
                 else
                 {
                     MovePlayer(inputVector.normalized);
-                    animator.SetBool("IsMoving", true); 
-
                 }
 
             }
@@ -60,19 +67,23 @@ public class VirtualJoystick : MonoBehaviour
             {
                 joystickHandle.localPosition = Vector3.zero; // Reset joystick when not touched
                 inputVector = Vector2.zero;
-                animator.SetBool("IsMoving", false);
+                SetAnimation("idle", true);
+                joystickEffect.gameObject.SetActive(false); 
             }
         }
         else
         {
             joystickHandle.localPosition = Vector3.zero; 
             inputVector = Vector2.zero;
-            animator.SetBool("IsMoving", false);
+            SetAnimation("idle", true);
+            joystickEffect.gameObject.SetActive(false);
         }
     }
 
     public void MovePlayer(Vector2 direction)
     {
+        joystickEffect.gameObject.SetActive (true);
+        SetAnimation("idle_paint", true);
         // Move the player based on the joystick input (transformed y axis to z axis)
         moveDirection = new Vector3(direction.x, 0, direction.y);
         player.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
@@ -86,5 +97,16 @@ public class VirtualJoystick : MonoBehaviour
         {
             player.rotation = Quaternion.Euler(-playerRotationX, 180, 0);
         }
+    }
+
+    void SetAnimation(string animationName, bool loop)
+    {
+        if (currentAnimation == animationName)
+        {
+            return;
+        }
+        animation.AnimationState.SetAnimation(0, animationName, loop);
+        currentAnimation = animationName;
+        Debug.Log("Current Animation: " +  animationName);
     }
 }
